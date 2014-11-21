@@ -91,7 +91,7 @@ void alu_parse_line(char *cmd_line){
     break;
   case 1:
     if(!strcmp(opcode,"reset")){
-      alu_main_reset(rega, regb, accumulator, flags);
+      alu(ALU_OP_RESET, rega, regb, accumulator, flags);
       printf("%s\n", opcode);
       break;
     }

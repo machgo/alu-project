@@ -33,6 +33,12 @@ unsigned int c = 0; 	/* carry bit address    */
 unsigned int s = 1;	    /* sum bit address      */
 unsigned int c_in = 2;	/* carry in bit address */
 
+void alu_reset(){
+    int i;
+    for(i=0;i<max_mue_memory;i++)
+        m[i] = '0';
+}
+
 
 
 /*
@@ -93,6 +99,9 @@ void half_adder(char p, char q){
    */
 void op_alu_reset(char rega[], char regb[], char accumulator[], char flags[]){
     int i;
+
+    alu_reset();
+
     /* clear rega, regb, accumulator, flags */
     for(i=0; i<REG_WIDTH; i++){
         rega[i] = '0';
@@ -312,15 +321,6 @@ void op_alu_ror(char regina[], char reginb[], char regouta[], char flags[]){
 }
 
 
-/*
-   clear mue_memory
-   */
-void alu_reset(){
-    int i;
-
-    for(i=0;i<max_mue_memory;i++)
-        m[i] = '0';
-}
 
 /*
 
