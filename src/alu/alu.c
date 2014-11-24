@@ -138,7 +138,7 @@ void one_complement(char reg[])
     int i = 0;
     for (i = 7; i >= 0 ; i--) 
     {
-        if (reg[i] = '1')
+        if (reg[i] == '1')
             reg[i] = '0';
         else 
             reg[i] = '1';
@@ -155,6 +155,7 @@ void two_complement(char reg[])
     one_complement(reg);
     for (i = 7; i >= 0; i--)
     {
+        printf("%c\n", reg[i]);
         if (reg[i] == '0')
         {
             reg[i] = '1';
@@ -196,7 +197,8 @@ accumulator := rega + regb + carry-flag
 */
 void op_adc(char rega[], char regb[], char accumulator[], char flags[])
 {
-    // your code here
+    op_add(rega, regb, accumulator, flags);
+    //TODO carry-stuff
 }
 
 /*
@@ -206,8 +208,10 @@ void op_adc(char rega[], char regb[], char accumulator[], char flags[])
 
 accumulator := rega - regb = rega + NOT(regb) + 1
 */
-void op_sub(char rega[], char regb[], char accumulator[], char flags[]){
-
+void op_sub(char rega[], char regb[], char accumulator[], char flags[])
+{
+    two_complement(regb);
+    op_add(rega, regb, accumulator, flags);
 }
 
 /*
@@ -222,7 +226,8 @@ void op_sub(char rega[], char regb[], char accumulator[], char flags[]){
 accumulator := rega - regb = rega + NOT(regb) +carryflag
 
 */
-void op_alu_sbc(char rega[], char regb[], char accumulator[], char flags[]){
+void op_alu_sbc(char rega[], char regb[], char accumulator[], char flags[])
+{
 }
 
 
@@ -233,7 +238,8 @@ void op_alu_sbc(char rega[], char regb[], char accumulator[], char flags[]){
 
 accumulator := rega AND regb
 */
-void op_and(char rega[], char regb[], char accumulator[], char flags[]){
+void op_and(char rega[], char regb[], char accumulator[], char flags[])
+{
 }
 /*
    Die Werte in Register rega und Register regb werden logisch geORt, 
@@ -242,7 +248,8 @@ void op_and(char rega[], char regb[], char accumulator[], char flags[]){
 
 accumulator := rega OR regb
 */
-void op_or(char rega[], char regb[], char accumulator[], char flags[]){
+void op_or(char rega[], char regb[], char accumulator[], char flags[])
+{
 } 
 /*
    Die Werte in Register rega und Register regb werden logisch geXORt,
