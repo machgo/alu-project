@@ -179,6 +179,7 @@ void op_add(char rega[], char regb[], char accumulator[], char flags[])
         full_adder(rega[i], regb[i], m[c]); 
         accumulator[i] = m[s];
     }
+    zsflagging(flags, accumulator);
 }
 
 /*
