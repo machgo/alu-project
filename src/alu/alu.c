@@ -76,7 +76,8 @@ den Mue-memory das summen-bit und das carry-bit.
 */
 void half_adder(char p, char q)
 {
-    char result, carry;
+    char result = '0';
+    char carry = '0';
     if (p == '0' && q == '0') 
     {
         result = '0';
@@ -261,6 +262,15 @@ accumulator := rega AND regb
 */
 void op_and(char rega[], char regb[], char accumulator[], char flags[])
 {
+    int i = 0;
+    for (i = 0; i < 8; i++) 
+    {
+        if (rega[i] == '1' && regb[i] == '1')
+            accumulator[i] = '1';
+        else
+            accumulator[i] = '0';
+    }
+    zsflagging(flags, accumulator);
 }
 /*
    Die Werte in Register rega und Register regb werden logisch geORt, 
@@ -271,6 +281,15 @@ accumulator := rega OR regb
 */
 void op_or(char rega[], char regb[], char accumulator[], char flags[])
 {
+    int i = 0;
+    for (i = 0; i < 8; i++) 
+    {
+        if (rega[i] == '1' || regb[i] == '1')
+            accumulator[i] = '1';
+        else
+            accumulator[i] = '0';
+    }
+    zsflagging(flags, accumulator);
 } 
 /*
    Die Werte in Register rega und Register regb werden logisch geXORt,
@@ -281,6 +300,15 @@ accumulator := rega XOR regb
 */
 void op_xor(char rega[], char regb[], char accumulator[], char flags[])
 {
+    int i = 0;
+    for (i = 0; i < 8; i++) 
+    {
+        if ((rega[i] == '1' && regb[i] == '0') || (rega[i] == '0' && regb[i] == '1'))
+            accumulator[i] = '1';
+        else
+            accumulator[i] = '0';
+    }
+    zsflagging(flags, accumulator);
 }
 
 
@@ -290,14 +318,14 @@ rega := not(rega)
 */
 void op_not_a(char rega[], char regb[], char accumulator[], char flags[])
 {
-
+    one_complement(rega);
 }
 
 
 /* Einer Komplement von Register regb */
 void op_not_b(char rega[], char regb[], char accumulator[], char flags[])
 {
-
+    one_complement(regb);
 }
 
 
@@ -316,7 +344,7 @@ regb := -regb
 */
 void op_neg_b(char rega[], char regb[], char accumulator[], char flags[])
 {
-
+    
 }
 
 /*
