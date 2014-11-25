@@ -33,28 +33,30 @@ unsigned int c = 0; 	/* carry bit address    */
 unsigned int s = 1;	    /* sum bit address      */
 unsigned int c_in = 2;	/* carry in bit address */
 
-void alu_reset(){
+void alu_reset()
+{
     int i;
     for(i=0;i<max_mue_memory;i++)
         m[i] = '0';
 }
 
-
-
 /*
    testet ob alle bits im akkumulator auf null gesetzt sind.
    Falls ja wird 1 returniert, ansonsten 0
    */
-int zero_test(char accumulator[]){
+int zero_test(char accumulator[])
+{
     int i;
-    for(i=0;accumulator[i]!='\0'; i++){
+    for(i=0;accumulator[i]!='\0'; i++)
+    {
         if(accumulator[i]!='0')		
             return 0;
     }
     return 1;
 }
 
-void zsflagging(char* flags,char *acc){
+void zsflagging(char* flags,char *acc)
+{
     //Zeroflag
     if(zero_test(acc))
         setZeroflag(flags);
@@ -72,18 +74,26 @@ void zsflagging(char* flags,char *acc){
 Halfadder: addiert zwei character p,q und schreibt in 
 den Mue-memory das summen-bit und das carry-bit.
 */
-void half_adder(char p, char q){
+void half_adder(char p, char q)
+{
     char result, carry;
-    if (p == '0' && q == '0') {
+    if (p == '0' && q == '0') 
+    {
         result = '0';
         carry = '0';
-    }else if(p=='0' && q=='1') {
+    }
+    else if(p=='0' && q=='1') 
+    {
         result = '1';
         carry = '0';
-    }else if(p=='1' && q=='0') {
+    }
+    else if(p=='1' && q=='0') 
+    {
         result = '1';
         carry = '0';
-    } else if(p=='1' && q=='1') {
+    }
+    else if(p=='1' && q=='1') 
+    {
         result = '0';
         carry = '1';
     }
@@ -97,13 +107,15 @@ void half_adder(char p, char q){
    Reset ALU
    resets registers and calls alu_op_reset 
    */
-void op_alu_reset(char rega[], char regb[], char accumulator[], char flags[]){
+void op_alu_reset(char rega[], char regb[], char accumulator[], char flags[])
+{
     int i;
 
     alu_reset();
 
     /* clear rega, regb, accumulator, flags */
-    for(i=0; i<REG_WIDTH; i++){
+    for(i=0; i<REG_WIDTH; i++)
+    {
         rega[i] = '0';
         regb[i] = '0';
         accumulator[i] = '0';
@@ -155,11 +167,14 @@ void two_complement(char reg[])
     one_complement(reg);
     for (i = 7; i >= 0; i--)
     {
-        printf("%c\n", reg[i]);
         if (reg[i] == '0')
         {
             reg[i] = '1';
             break;
+        }
+        else
+        {
+            reg[i] = '0';
         }
     }
 }
@@ -180,6 +195,12 @@ void op_add(char rega[], char regb[], char accumulator[], char flags[])
         full_adder(rega[i], regb[i], m[c]); 
         accumulator[i] = m[s];
     }
+
+    if ((rega[0] == '1' && regb[0] == '1' && accumulator[0] == '0') || (rega[0] == '0' && regb[0] == '0' && accumulator[0] == '1'))
+    {
+        setOverflowflag(flags);
+    }
+
     zsflagging(flags, accumulator);
 }
 
@@ -258,7 +279,8 @@ void op_or(char rega[], char regb[], char accumulator[], char flags[])
 
 accumulator := rega XOR regb
 */
-void op_xor(char rega[], char regb[], char accumulator[], char flags[]){
+void op_xor(char rega[], char regb[], char accumulator[], char flags[])
+{
 }
 
 
@@ -266,13 +288,15 @@ void op_xor(char rega[], char regb[], char accumulator[], char flags[]){
    Einer-Komplement von Register rega
 rega := not(rega)
 */
-void op_not_a(char rega[], char regb[], char accumulator[], char flags[]){
+void op_not_a(char rega[], char regb[], char accumulator[], char flags[])
+{
 
 }
 
 
 /* Einer Komplement von Register regb */
-void op_not_b(char rega[], char regb[], char accumulator[], char flags[]){
+void op_not_b(char rega[], char regb[], char accumulator[], char flags[])
+{
 
 }
 
@@ -281,7 +305,8 @@ void op_not_b(char rega[], char regb[], char accumulator[], char flags[]){
    Negation von Register rega 
 rega := -rega
 */
-void op_neg_a(char rega[], char regb[], char accumulator[], char flags[]){
+void op_neg_a(char rega[], char regb[], char accumulator[], char flags[])
+{
 
 }
 
@@ -289,7 +314,8 @@ void op_neg_a(char rega[], char regb[], char accumulator[], char flags[]){
    Negation von Register regb 
 regb := -regb
 */
-void op_neg_b(char rega[], char regb[], char accumulator[], char flags[]){
+void op_neg_b(char rega[], char regb[], char accumulator[], char flags[])
+{
 
 }
 
@@ -302,7 +328,8 @@ void op_neg_b(char rega[], char regb[], char accumulator[], char flags[]){
    arithmetic shift left
    asl
    */
-void op_alu_asl(char regina[], char reginb[], char regouta[], char flags[]){
+void op_alu_asl(char regina[], char reginb[], char regouta[], char flags[])
+{
 }
 
 
@@ -310,13 +337,15 @@ void op_alu_asl(char regina[], char reginb[], char regouta[], char flags[]){
    logical shift right
    lsr
    */
-void op_alu_lsr(char regina[], char reginb[], char regouta[], char flags[]){
+void op_alu_lsr(char regina[], char reginb[], char regouta[], char flags[])
+{
 }
 /*
    rotate 
    rotate left
    */
-void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[]){
+void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[])
+{
 }
 
 /*
@@ -324,7 +353,8 @@ void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[]){
    rotate left
    Move each of the bits in  A one place to the right. Bit 7 is filled with the current value of the carry flag whilst the old bit 0 becomes the new carry flag value.
    */
-void op_alu_ror(char regina[], char reginb[], char regouta[], char flags[]){
+void op_alu_ror(char regina[], char reginb[], char regouta[], char flags[])
+{
 
 }
 
@@ -339,7 +369,8 @@ void op_alu_ror(char regina[], char reginb[], char regouta[], char flags[]){
    alu_fct(int opcode, char reg_in_a[], char reg_in_b[], char reg_out_accu[], char flags[])
 
 */
-void alu(unsigned int alu_opcode, char reg_in_a[], char reg_in_b[], char reg_out_accu[], char flags[]){
+void alu(unsigned int alu_opcode, char reg_in_a[], char reg_in_b[], char reg_out_accu[], char flags[])
+{
     char dummyflags[9] = "00000000";  
     switch ( alu_opcode ){
         case ALU_OP_ADD :
