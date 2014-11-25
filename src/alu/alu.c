@@ -70,6 +70,15 @@ void zsflagging(char* flags,char *acc)
         clearSignflag(flags);
 }
 
+void resetArray(char arr[])
+{
+    int i = 0;
+    for (i = 0; i < 8; i++) 
+    {
+        arr[i] = '0';
+    }
+}
+
 /*
 Halfadder: addiert zwei character p,q und schreibt in 
 den Mue-memory das summen-bit und das carry-bit.
@@ -190,6 +199,8 @@ accumulator := rega + regb
 */
 void op_add(char rega[], char regb[], char accumulator[], char flags[])
 {
+    resetArray(accumulator);
+    resetArray(flags);
     int i = 0;
     for (i = 7; i >= 0; i--) 
     {
@@ -201,6 +212,8 @@ void op_add(char rega[], char regb[], char accumulator[], char flags[])
     {
         setOverflowflag(flags);
     }
+    if (m[c] == '1')
+        setCarryflag(flags);
 
     zsflagging(flags, accumulator);
 }
