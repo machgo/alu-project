@@ -73,7 +73,7 @@ void zsflagging(char* flags,char *acc)
 void resetArray(char arr[])
 {
     int i = 0;
-    for (i = 0; i < 8; i++) 
+    for (i = 0; i < REG_WIDTH; i++) 
     {
         arr[i] = '0';
     }
@@ -175,11 +175,13 @@ void two_complement(char reg[])
 {
     int i = 0;
     one_complement(reg);
+    m[c] = '1';
     for (i = 7; i >= 0; i--)
     {
         if (reg[i] == '0')
         {
             reg[i] = '1';
+            m[c] = '0';
             break;
         }
         else
@@ -199,6 +201,7 @@ accumulator := rega + regb
 */
 void op_add(char rega[], char regb[], char accumulator[], char flags[])
 {
+    alu_reset();
     resetArray(accumulator);
     resetArray(flags);
     int i = 0;
@@ -245,8 +248,33 @@ accumulator := rega - regb = rega + NOT(regb) + 1
 */
 void op_sub(char rega[], char regb[], char accumulator[], char flags[])
 {
+    char temp[8];
+    for (int i = 0; i < 8; i++)
+    {
+        temp[i] = regb[i];
+    }
     two_complement(regb);
+    char carry = m[c];
+
     op_add(rega, regb, accumulator, flags);
+
+    for (int i = 0; i < 8; i++)
+    {
+        regb[i] = temp[i];
+    }
+
+    if ((rega[0] == '0' && regb[0] == '1' && accumulator[0] == '1') || (rega[0] == '1' && regb[0] == '0' && accumulator[0] == '0'))
+    {
+        setOverflowflag(flags);
+    }
+    else
+    {
+        clearOverflowflag(flags); 
+    }
+        
+    if (carry == '1')
+        setCarryflag(flags);
+
 }
 
 /*
@@ -348,7 +376,7 @@ rega := -rega
 */
 void op_neg_a(char rega[], char regb[], char accumulator[], char flags[])
 {
-
+    two_complement(rega);
 }
 
 /*
@@ -357,7 +385,7 @@ regb := -regb
 */
 void op_neg_b(char rega[], char regb[], char accumulator[], char flags[])
 {
-    
+    two_complement(regb);
 }
 
 /*
