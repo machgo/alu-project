@@ -235,8 +235,15 @@ accumulator := rega + regb + carry-flag
 */
 void op_adc(char rega[], char regb[], char accumulator[], char flags[])
 {
+    char carry = m[c];
     op_add(rega, regb, accumulator, flags);
-    //TODO carry-stuff
+    if (carry == '1')
+    {
+        char temp[8];
+        char one[8] = {'0', '0', '0', '0', '0', '0', '0', '1'}; 
+        strcpy(temp, accumulator);
+        op_add(temp, one, accumulator, flags);
+    }
 }
 
 /*
@@ -262,7 +269,7 @@ void op_sub(char rega[], char regb[], char accumulator[], char flags[])
     {
         regb[i] = temp[i];
     }
-
+    // Overflow for subtraction : 0 && 1 && 1 or 1 && 0 && 0
     if ((rega[0] == '0' && regb[0] == '1' && accumulator[0] == '1') || (rega[0] == '1' && regb[0] == '0' && accumulator[0] == '0'))
     {
         setOverflowflag(flags);
@@ -274,7 +281,6 @@ void op_sub(char rega[], char regb[], char accumulator[], char flags[])
         
     if (carry == '1')
         setCarryflag(flags);
-
 }
 
 /*
@@ -399,6 +405,18 @@ void op_neg_b(char rega[], char regb[], char accumulator[], char flags[])
    */
 void op_alu_asl(char regina[], char reginb[], char regouta[], char flags[])
 {
+    int moves = 1;
+    int i = 0;
+    for (i = 7; i >= 0 ; i--)
+    {
+        int dest = i - moves;
+        if (dest >= 0)
+            regouta[dest] = regina[i];
+    }
+    for (i = 7; i > 7-moves; i--)
+    {
+        regouta[i] = '0'; 
+    }
 }
 
 
@@ -415,6 +433,17 @@ void op_alu_lsr(char regina[], char reginb[], char regouta[], char flags[])
    */
 void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[])
 {
+    int i = 0;
+    int moves = 1;
+
+    for (i = 0; i < 8; i++)
+    {
+        int source = i - moves;
+        if (source < 0)
+            source += 8;
+    
+        regouta[i] = regina[source];
+    }
 }
 
 /*
@@ -424,7 +453,7 @@ void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[])
    */
 void op_alu_ror(char regina[], char reginb[], char regouta[], char flags[])
 {
-
+    
 }
 
 
