@@ -205,6 +205,7 @@ void op_add(char rega[], char regb[], char accumulator[], char flags[])
     resetArray(accumulator);
     resetArray(flags);
     int i = 0;
+
     for (i = 7; i >= 0; i--) 
     {
         full_adder(rega[i], regb[i], m[c]); 
@@ -235,7 +236,8 @@ accumulator := rega + regb + carry-flag
 */
 void op_adc(char rega[], char regb[], char accumulator[], char flags[])
 {
-    char carry = m[c];
+    char carry;
+    carry = m[c];
     op_add(rega, regb, accumulator, flags);
     if (carry == '1')
     {
@@ -297,6 +299,16 @@ accumulator := rega - regb = rega + NOT(regb) +carryflag
 */
 void op_alu_sbc(char rega[], char regb[], char accumulator[], char flags[])
 {
+    char carry; 
+    carry = m[c];
+    op_sub(rega, regb, accumulator, flags);
+    if (carry == '1')
+    {
+        char temp[8];
+        char one[8] = {'0', '0', '0', '0', '0', '0', '0', '1'}; 
+        strcpy(temp, accumulator);
+        op_add(temp, one, accumulator, flags);
+    }
 }
 
 
@@ -405,18 +417,20 @@ void op_neg_b(char rega[], char regb[], char accumulator[], char flags[])
    */
 void op_alu_asl(char regina[], char reginb[], char regouta[], char flags[])
 {
-    int moves = 1;
     int i = 0;
-    for (i = 7; i >= 0 ; i--)
+
+    if (regina[0] == '1')
+        setCarryflag(flags);
+    else
+        clearCarryflag(flags);
+
+    for (i = 7; i >= 0; i--)
     {
-        int dest = i - moves;
+        int dest = i-1;
         if (dest >= 0)
             regouta[dest] = regina[i];
     }
-    for (i = 7; i > 7-moves; i--)
-    {
-        regouta[i] = '0'; 
-    }
+    regouta[7] = '0';
 }
 
 
@@ -426,6 +440,19 @@ void op_alu_asl(char regina[], char reginb[], char regouta[], char flags[])
    */
 void op_alu_lsr(char regina[], char reginb[], char regouta[], char flags[])
 {
+    int i = 0;
+
+    for (i = 0; i < 8; i++)
+    {
+        int dest = i+1;
+        if (dest < 8)
+            regouta[dest] = regina[i];
+    }
+
+    if (getCarryflag(flags) == '1')
+        regouta[0] = '1';
+    else
+        regouta[0] = '0';
 }
 /*
    rotate 
@@ -433,17 +460,9 @@ void op_alu_lsr(char regina[], char reginb[], char regouta[], char flags[])
    */
 void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[])
 {
-    int i = 0;
-    int moves = 1;
-
-    for (i = 0; i < 8; i++)
-    {
-        int source = i - moves;
-        if (source < 0)
-            source += 8;
-    
-        regouta[i] = regina[source];
-    }
+    char temp = getCarryflag(flags);
+    op_alu_asl(regina, reginb, regouta, flags);
+    regouta[7] = temp;
 }
 
 /*
@@ -453,7 +472,13 @@ void op_alu_rol(char regina[], char reginb[], char regouta[], char flags[])
    */
 void op_alu_ror(char regina[], char reginb[], char regouta[], char flags[])
 {
-    
+    char temp = regina[7];
+    op_alu_asl(regina, reginb, regouta, flags);
+    regouta[7] = temp;
+    if (temp == '1')
+        setCarryflag(flags);
+    else 
+        clearCarryflag(flags);
 }
 
 
