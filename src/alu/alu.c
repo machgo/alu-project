@@ -11,7 +11,6 @@
    bho1 26.11.2012 - remove bit declaration from op_alu_asl and op_alu_ror as they are unused (this may change later)
    bho1 20.9.2014 cleaned
 
-
    GPL applies
 
    -->>  Marco Schmid  <<--
@@ -26,7 +25,7 @@
 #include "flags.h"
 int const max_mue_memory = 100;
 
-char mue_memory[100]= "100 Byte - this memory is at your disposal"; /*mue-memory */
+char mue_memory[100]= "100 Byte"; /*mue-memory */
 char* m = mue_memory;
 
 unsigned int c = 0; 	/* carry bit address    */
@@ -199,7 +198,8 @@ void op_add(char rega[], char regb[], char accumulator[], char flags[])
         accumulator[i] = m[s];
     }
 
-    if ((rega[0] == '1' && regb[0] == '1' && accumulator[0] == '0') || (rega[0] == '0' && regb[0] == '0' && accumulator[0] == '1'))
+    if ((rega[0] == '1' && regb[0] == '1' && accumulator[0] == '0') || 
+            (rega[0] == '0' && regb[0] == '0' && accumulator[0] == '1'))
     {
         setOverflowflag(flags);
     }
@@ -351,7 +351,8 @@ void op_xor(char rega[], char regb[], char accumulator[], char flags[])
     int i = 0;
     for (i = 0; i < 8; i++) 
     {
-        if ((rega[i] == '1' && regb[i] == '0') || (rega[i] == '0' && regb[i] == '1'))
+        if ((rega[i] == '1' && regb[i] == '0') || 
+                (rega[i] == '0' && regb[i] == '1'))
             accumulator[i] = '1';
         else
             accumulator[i] = '0';
